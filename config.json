@@ -1,0 +1,41 @@
+{
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "tiktok_frame": {
+    "x": 1100,
+    "y": 40,
+    "width": 780,
+    "height": 1000,
+    "corner_radius": 30
+  },
+  "comment_frame": {
+    "x_center": 1440,
+    "y_center": 540,
+    "max_width": 900,
+    "max_height": 900,
+    "corner_radius": 20,
+    "hold_duration_seconds": 5
+  },
+  "audio": {
+    "target_lufs": -14,
+    "true_peak": -1.0
+  },
+  "transcription": {
+    "model": "base",
+    "language": "en"
+  },
+  "timeline": {
+    "framerate": 30,
+    "reaction_track": "V1",
+    "tiktok_track": "V2",
+    "default_reaction_gap_seconds": 30,
+    "color_label": "Orange"
+  },
+  "editor": {
+    "lock_tiktok_segments": true,
+    "include_transcripts": true,
+    "notes_in_markers": true
+  }
+}

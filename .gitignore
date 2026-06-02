@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Pipeline working content — keep folder stubs but not files
+input/triage/*
+!input/triage/.gitkeep
+input/tiktoks/*
+!input/tiktoks/.gitkeep
+input/skipped/*
+!input/skipped/.gitkeep
+input/comments/*
+!input/comments/.gitkeep
+
+output/tiktoks/*
+!output/tiktoks/.gitkeep
+output/comments/*
+!output/comments/.gitkeep
+output/normalized/*
+!output/normalized/.gitkeep
+output/transcripts/*
+!output/transcripts/.gitkeep
+output/timeline/*
+!output/timeline/.gitkeep
+output/editor_handoff/*
+!output/editor_handoff/.gitkeep
+
+triage_data/*.json
+
+# Whisper model cache
+*.bin
+*.pt
