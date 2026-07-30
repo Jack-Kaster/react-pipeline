@@ -5,6 +5,8 @@ import csv
 import re
 import subprocess
 import sys
+import tkinter as tk
+from tkinter import filedialog
 from pathlib import Path
 
 OUTPUT_DIR = Path.home() / "Downloads" / "tiktoks"
@@ -29,10 +31,16 @@ def next_available_path(output_dir, handle):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python3 download_csv.py /path/to/file.csv")
-        sys.exit(1)
-
-    csv_path = Path(sys.argv[1])
+        root = tk.Tk()
+        root.withdraw()
+        chosen = filedialog.askopenfilename(title="Select CSV file", filetypes=[("CSV files", "*.csv")])
+        root.destroy()
+        if not chosen:
+            print("No file selected.")
+            sys.exit(1)
+        csv_path = Path(chosen)
+    else:
+        csv_path = Path(sys.argv[1])
     if not csv_path.exists():
         print(f"File not found: {csv_path}")
         sys.exit(1)
