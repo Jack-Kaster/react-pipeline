@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Download all TikTok URLs from a CSV file."""
+
+import csv
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+OUTPUT_DIR = Path.home() / "Downloads" / "tiktoks"
+
+
+def handle_from_url(url):
+    m = re.search(r"/@([^/]+)/video/", url)
+    return m.group(1) if m else "unknown"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 download_csv.py /path/to/file.csv")
+        sys.exit(1)
+
+    csv_path = Path(sys.argv[1])
+    if not csv_path.exists():
+        print(f"File not found: {csv_path}")
+        sys.exit(1)
+
+    urls = []
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            url = row.get("url", "").strip()
+            if url.startswith("https://www.tiktok.com"):
+                urls.append(url)
+
+    if not urls:
+        print("No TikTok URLs found in that file.")
+        sys.exit(1)
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Downloading {len(urls)} videos to {OUTPUT_DIR}\n")
+
+    failed = 0
+    for i, url in enumerate(urls, 1):
+        handle = handle_from_url(url)
+        print(f"[{i}/{len(urls)}] {handle}...")
+        out = str(OUTPUT_DIR / handle / f"{handle}.%(ext)s")
+        result = subprocess.run([
+            "yt-dlp",
+            "--format", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+            "--merge-output-format", "mp4",
+            "--output", out,
+            "--cookies-from-browser", "chrome",
+            "--restrict-filenames",
+            "--no-overwrites",
+            "--no-playlist",
+            "--quiet",
+            url,
+        ], capture_output=True, text=True)
+
+        if result.returncode != 0:
+            print(f"  FAILED")
+            failed += 1
+        else:
+            print(f"  done")
+
+    print(f"\nFinished. {len(urls) - failed}/{len(urls)} downloaded.")
+
+
+if __name__ == "__main__":
+    main()
