@@ -5,8 +5,6 @@ import csv
 import re
 import subprocess
 import sys
-import tkinter as tk
-from tkinter import filedialog
 from pathlib import Path
 
 OUTPUT_DIR = Path.home() / "Downloads" / "tiktoks"
@@ -31,10 +29,11 @@ def next_available_path(output_dir, handle):
 
 def main():
     if len(sys.argv) < 2:
-        root = tk.Tk()
-        root.withdraw()
-        chosen = filedialog.askopenfilename(title="Select CSV file", filetypes=[("CSV files", "*.csv")])
-        root.destroy()
+        result = subprocess.run([
+            "osascript", "-e",
+            'POSIX path of (choose file of type {"csv"} with prompt "Select your TikTok CSV file:")'
+        ], capture_output=True, text=True)
+        chosen = result.stdout.strip()
         if not chosen:
             print("No file selected.")
             sys.exit(1)
