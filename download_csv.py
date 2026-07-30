@@ -15,6 +15,18 @@ def handle_from_url(url):
     return m.group(1) if m else "unknown"
 
 
+def next_available_path(output_dir, handle):
+    path = output_dir / f"{handle}.mp4"
+    if not path.exists():
+        return path
+    i = 2
+    while True:
+        path = output_dir / f"{handle}-{i}.mp4"
+        if not path.exists():
+            return path
+        i += 1
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 download_csv.py /path/to/file.csv")
@@ -42,8 +54,9 @@ def main():
     failed = 0
     for i, url in enumerate(urls, 1):
         handle = handle_from_url(url)
-        print(f"[{i}/{len(urls)}] {handle}...")
-        out = str(OUTPUT_DIR / handle / f"{handle}.%(ext)s")
+        dest = next_available_path(OUTPUT_DIR, handle)
+        print(f"[{i}/{len(urls)}] {dest.name}...")
+        out = str(dest.with_suffix("")) + ".%(ext)s"
         result = subprocess.run([
             "yt-dlp",
             "--format", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
@@ -51,7 +64,6 @@ def main():
             "--output", out,
             "--cookies-from-browser", "chrome",
             "--restrict-filenames",
-            "--no-overwrites",
             "--no-playlist",
             "--quiet",
             url,
